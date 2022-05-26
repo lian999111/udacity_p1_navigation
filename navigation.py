@@ -95,7 +95,8 @@ plt.savefig('result/score.jpg')
 
 # %% Watch a smart agent
 import time
-agent.qnetwork_local.load_state_dict(torch.load('checkpoint.pth'))
+agent = Agent(state_size=state_size, action_size=action_size, seed=0)
+agent.qnetwork_local.load_state_dict(torch.load('result/checkpoint.pth'))
 
 for i in range(3):
     # Reset the environment
