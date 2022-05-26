@@ -39,7 +39,7 @@ class Agent():
         self.optimizer = optim.Adam(self.qnetwork_local.parameters(), lr=LR)
 
         # Replay memory
-        self.memory = ReplayBuffer(action_size, BUFFER_SIZE, BATCH_SIZE, seed)
+        self.memory = ReplayBuffer(BUFFER_SIZE, BATCH_SIZE, seed)
         # Initialize time step (for updating every UPDATE_EVERY steps)
         self.t_step = 0
     
@@ -85,8 +85,8 @@ class Agent():
         """
         states, actions, rewards, next_states, dones = experiences
 
-        ## TODO: compute and minimize the loss
-        "*** YOUR CODE HERE ***"
+        # Double DQN technique: use target network to determine next action
+        # to prevent incidental overestimation of values 
         Q_target_next = self.qnetwork_target(next_states).detach().max(1)[0].unsqueeze(1)
         Q_target = rewards + gamma * Q_target_next * (1 - dones)
         
