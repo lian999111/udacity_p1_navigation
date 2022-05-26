@@ -10,7 +10,7 @@ import numpy as np
 # %% Start environment
 env = UnityEnvironment(file_name="Banana_Linux/Banana.x86_64")
 
-# %% get the default brain
+# %% Get the default brain
 brain_name = env.brain_names[0]
 brain = env.brains[brain_name]
 
@@ -30,7 +30,7 @@ print('States look like:', state)
 state_size = len(state)
 print('States have length:', state_size)
 
-# %%
+# %% Define a DQN agent and the training process
 agent = Agent(state_size=state_size, action_size=action_size, seed=0)
 
 def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.995, goal_score=13):
@@ -77,8 +77,6 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
     return scores
 
 # %% Train dqn agent
-# agent.qnetwork_local.load_state_dict(torch.load('checkpoint.pth'))
-# agent.qnetwork_target.load_state_dict(torch.load('checkpoint.pth'))
 scores = dqn()
 
 # plot the scores
@@ -108,7 +106,6 @@ for i in range(3):
         score += reward
         if done:
             break
-        time.sleep(0.1)
     
     print('Score: {}'.format(score))
 
