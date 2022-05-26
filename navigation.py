@@ -33,7 +33,7 @@ print('States have length:', state_size)
 # %% Define a DQN agent and the training process
 agent = Agent(state_size=state_size, action_size=action_size, seed=0)
 
-def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.995, goal_score=13):
+def train_dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.995, goal_score=13):
     """Deep Q-Learning.
     
     Params
@@ -45,6 +45,7 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
         eps_decay (float): multiplicative factor (per episode) for decreasing epsilon
     """
     scores = []                        # list containing scores from each episode
+    average_scores = []
     scores_window = deque(maxlen=100)  # last 100 scores
     eps = eps_start                    # initialize epsilon
     for i_episode in range(1, n_episodes+1):
@@ -70,22 +71,27 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
         print('\rEpisode {}\tAverage Score: {:.2f}'.format(i_episode, np.mean(scores_window)), end="")
         if i_episode % 100 == 0:
             print('\rEpisode {}\tAverage Score: {:.2f}'.format(i_episode, np.mean(scores_window)))
-        if np.mean(scores_window) >= goal_score:
+
+        average_score = np.mean(scores_window)
+        average_scores.append(average_score)
+        if average_score >= goal_score:
             print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(i_episode-100, np.mean(scores_window)))
-            torch.save(agent.qnetwork_local.state_dict(), 'checkpoint.pth')
+            torch.save(agent.qnetwork_local.state_dict(), 'result/checkpoint.pth')
             break
-    return scores
+    return scores, average_scores
 
 # %% Train dqn agent
-scores = dqn()
+scores, average_scores = train_dqn()
 
 # plot the scores
 fig = plt.figure()
 ax = fig.add_subplot(111)
-plt.plot(np.arange(len(scores)), scores)
+plt.plot(np.arange(len(scores)), scores, label='score')
+plt.plot(np.arange(len(average_scores)), average_scores, label='avg score')
+plt.legend()
 plt.ylabel('Score')
 plt.xlabel('Episode #')
-plt.show()
+plt.savefig('result/score.jpg')
 
 # %% Watch a smart agent
 import time
@@ -106,6 +112,7 @@ for i in range(3):
         score += reward
         if done:
             break
+        time.sleep(0.1)
     
     print('Score: {}'.format(score))
 
