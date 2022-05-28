@@ -1,2 +1,5 @@
 Banana_Linux
+__pycache__
+.vscode
+
 *.log
