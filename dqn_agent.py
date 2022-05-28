@@ -85,9 +85,11 @@ class Agent():
         """
         states, actions, rewards, next_states, dones = experiences
 
-        # Double DQN technique: use target network to determine next action
-        # to prevent incidental overestimation of values 
-        Q_target_next = self.qnetwork_target(next_states).detach().max(1)[0].unsqueeze(1)
+        # Double DQN technique: use local network to to determine next action and target network to evaluate the value
+        # This prevents incidental overestimation of values
+        next_actions = self.qnetwork_local(next_states).detach().argmax(dim=1, keepdim=True)
+        Q_target_next = self.qnetwork_target(next_states).gather(1, next_actions)
+
         Q_target = rewards + gamma * Q_target_next * (1 - dones)
         
         Q_expected = self.qnetwork_local(states).gather(1, actions)

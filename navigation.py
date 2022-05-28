@@ -75,7 +75,7 @@ def train_dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_deca
         average_score = np.mean(scores_window)
         average_scores.append(average_score)
         if average_score >= goal_score:
-            print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(i_episode-100, np.mean(scores_window)))
+            print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(i_episode, average_score))
             torch.save(agent.qnetwork_local.state_dict(), 'result/checkpoint.pth')
             break
     return scores, average_scores
