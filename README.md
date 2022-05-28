@@ -36,6 +36,21 @@ The task is episodic, and in order to solve the environment, the agent must get 
 
 3. Place the file in the course GitHub repository, in the `p1_navigation/` folder, and unzip (or decompress) the file. 
 
+4. Change the `file_name` parameter in __navigation.py__ to match the location of the Unity environment that you downloaded.
+
+- **Mac**: `"path/to/VisualBanana.app"`
+- **Windows** (x86): `"path/to/VisualBanana_Windows_x86/Banana.exe"`
+- **Windows** (x86_64): `"path/to/VisualBanana_Windows_x86_64/Banana.exe"`
+- **Linux** (x86): `"path/to/VisualBanana_Linux/Banana.x86"`
+- **Linux** (x86_64): `"path/to/VisualBanana_Linux/Banana.x86_64"`
+- **Linux** (x86, headless): `"path/to/VisualBanana_Linux_NoVis/Banana.x86"`
+- **Linux** (x86_64, headless): `"path/to/VisualBanana_Linux_NoVis/Banana.x86_64"`
+
+For instance, if you are using a Mac, then you downloaded `VisualBanana.app`.  If this file is in the same folder as the notebook, then the line in `navigation.py` should appear as follows:
+```
+env = UnityEnvironment(file_name="VisualBanana.app")
+```
+
 ### How to run
 
 Traning and demonstration of the DQN agent is implemented in `navigation.py`. To see the training and watch the result of a smart agent, simply run:\
