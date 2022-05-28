@@ -14,6 +14,7 @@ GAMMA = 0.99            # discount factor
 TAU = 1e-3              # for soft update of target parameters
 LR = 5e-4               # learning rate 
 UPDATE_EVERY = 4        # how often to update the network
+DDQN = False
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -84,11 +85,15 @@ class Agent():
             gamma (float): discount factor
         """
         states, actions, rewards, next_states, dones = experiences
-
-        # Double DQN technique: use local network to to determine next action and target network to evaluate the value
-        # This prevents incidental overestimation of values
-        next_actions = self.qnetwork_local(next_states).detach().argmax(dim=1, keepdim=True)
-        Q_target_next = self.qnetwork_target(next_states).gather(1, next_actions)
+        
+        if DDQN:
+            # Double DQN technique: use local network to to determine next action and target network to evaluate the value
+            # This prevents incidental overestimation of values in theory
+            next_actions = self.qnetwork_local(next_states).detach().argmax(dim=1, keepdim=True)
+            Q_target_next = self.qnetwork_target(next_states).gather(1, next_actions)
+        else:
+            # Vanilla DQN
+            Q_target_next = self.qnetwork_target(next_states).detach().max(1)[0].unsqueeze(1)
 
         Q_target = rewards + gamma * Q_target_next * (1 - dones)
         
